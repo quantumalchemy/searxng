@@ -85,6 +85,78 @@
   </footer>
   <!--[if gte IE 9]>-->
   <script src="{{ url_for('static', filename='js/searxng.min.js') }}"></script>
+  
+  <!-- DDG AI ANSWER -->
+  <style>
+#answers{display: none;}
+.lds-hourglass {
+  /* change color here */
+  color: #1c4c5b
+}
+.lds-hourglass,
+.lds-hourglass:after {
+  box-sizing: border-box;
+}
+.lds-hourglass {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-hourglass:after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid currentColor;
+  border-color: currentColor transparent currentColor transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+  </style>
+  <script>
+	window.addEventListener('load', function() {
+		console.log("window.addEventListener");
+		var answers = document.querySelector('#answers .answer span');
+		var iq = document.getElementById('q').value
+		if (answers != null && answers.innerText != "NONE" ) {
+			console.log("window.addEventListener", answers, answers.innerText);
+			fetchData(answers.innerText,iq);
+		};
+		// webapp.py -> def ai_answer()
+		function fetchData(ctx,iq) {
+			fetch('/ai_answer?' + new URLSearchParams({
+				ctx: ctx,
+				iq: iq,
+				}))
+				.then(response => response.json())
+				.then(data => {
+					console.log("ai-answer:", data.answer_html);
+					document.getElementById('ai-answer').innerText = data.answer_html;
+				})
+				.catch(error => console.error('Error fetching data:', error));
+		}
+		
+	});
+	
+
+ </script>
+  <!-- DDG AI ANSWER EOF-->
   <!--<![endif]-->
 </body>
 </html>
