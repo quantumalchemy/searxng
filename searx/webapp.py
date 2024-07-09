@@ -618,7 +618,6 @@ def client_token(token=None):
     link_token.ping(request, token)
     return Response('', mimetype='text/css')
 
-
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     """Search query in q and return results.
@@ -1318,6 +1317,15 @@ def config():
 def page_not_found(_e):
     return render('404.html'), 404
 
+# DDG AI ANSWER
+from plugins import plugin1
+@app.route('/ai_answer')
+def ai_answer():
+    ctx = request.args.get('ctx')
+    iq = request.args.get('iq')
+    llmr = plugin1.get_llm_answer(ctx,iq)
+    return jsonify(answer_html=llmr)
+    
 
 # see https://flask.palletsprojects.com/en/1.1.x/cli/
 # True if "FLASK_APP=searx/webapp.py FLASK_ENV=development flask run"
